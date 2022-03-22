@@ -7,8 +7,8 @@
 /* returns an array ofwhat characters are the same in
    both strings difirent characters are reprezented
    by null in the result array */
-char* right_place_mask(char* guess, char* word) {
-    char* res = malloc(WORD_LENGTH);
+char *right_place_mask(char *guess, char *word) {
+    char *res = malloc(WORD_LENGTH);
     int i;
     for (i=0; i<WORD_LENGTH; i++)
         if (guess[i] == word[i]) res[i] = word[i];
@@ -17,9 +17,9 @@ char* right_place_mask(char* guess, char* word) {
     return res;
 }
 
-char* wrong_place_in_string_mask(char* guess, char* word) {
+char *wrong_place_in_string_mask(char *guess, char *word) {
     /* TODO: not let multiple letters map to the same letter */
-    char* res = malloc(WORD_LENGTH);
+    char *res = malloc(WORD_LENGTH);
     int i, j;
     for(i=0; i<WORD_LENGTH; i++) {
         for (j=0; j<WORD_LENGTH; j++) {
@@ -30,16 +30,16 @@ char* wrong_place_in_string_mask(char* guess, char* word) {
     return res;
 }
 
-void display_word(char* word) {
+void display_word(char *word) {
     int i;
     for (i=0; i<WORD_LENGTH; i++)
         if (word[i] == '\0') putc(' ', stdout);
         else putc(word[i], stdout);
 }
 
-void results(char* word, char* guess) {
-    char* right = right_place_mask(guess, word);
-    char* almost = wrong_place_in_string_mask(guess, word);
+void results(char *word, char *guess) {
+    char *right = right_place_mask(guess, word);
+    char *almost = wrong_place_in_string_mask(guess, word);
     printf("the guess: %s\n", guess);
     printf("the word : %s\n", word);
     printf("matching : ");
@@ -47,7 +47,7 @@ void results(char* word, char* guess) {
     puts(""); /* new line */
 }
 
-void is_all_alpha(char* str) {
+void is_all_alpha(char *str) {
     while (isalpha(*str)) str++;
     if (*str == '\0') return true;
     else return false;
