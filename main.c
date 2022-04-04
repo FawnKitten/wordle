@@ -43,10 +43,11 @@ char *wrong_place_in_string_mask(char *guess, char *word, char *correct_mask) {
     errase_mask(word_cpy, correct_mask, word);
 
 
-    for (guess_index=0; guess_index<WORD_LENGTH; guess_index++) {
+    for (guess_index=0; guess_index<WORD_LENGTH; guess_index++) {5
         for (word_index=0; word_index<WORD_LENGTH; word_index++) {
             if (guess[guess_index] == word_cpy[word_index]) { /* guess at index in word */
                 printf("guess_index %d, word_index %d\n\n", guess_index, word_index);
+				printf("guess[i] %c, word_cpy[i] %c", guess[guess_index], word_cpy[i])
                 res[guess_index] = guess[guess_index];
                 word_cpy[word_index] = '\0';
             } else res[guess_index] = '\0';
