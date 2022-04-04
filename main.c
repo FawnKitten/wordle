@@ -1,6 +1,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<ctype.h>
+#include<string.h>
 
 #define WORD_LENGTH 6
 /* five characters and one null byte */
@@ -18,33 +19,47 @@ char *right_place_mask(char *guess, char *word) {
     return res;
 }
 
+char *errase_mask(char *dest, char *source_mask, char *word) {
+    int i;
+    for (i=0; i<WORD_LENGTH; i++) {
+        if (source_mask[i] == '\0') dest[i] = word[i];
+        else dest[i] = '\0';
+    }
+    return dest;
+}
+
 /* returns an array of what characters appear in the
    other string */
-char *wrong_place_in_string_mask(char *guess, char *word) {
+char *wrong_place_in_string_mask(char *guess, char *word, char *correct_mask) {
     /* TODO: check if letter was previously mapped */
     /* TODO: make is so if a letter repeats more than twice
        the code doesn't break */
-    char *res = calloc(WORD_LENGTH, sizeof char);
-    int i, j, k, letter_count;
-    for (i=0; i<WORD_LENGTH; i++) {
-        for (j=0; j<WORD_LENGTH; j++) {
-            if (guess[i] == word[j]) {
-                for (k=0; k<WORD_LENGTH; k++) {
-                    /* where I left off... trying to map
-                       repeating letters of the guess
-                       to the correspondin letter in the
-                       word */
-                    /* eg
-                       hello
-                         ||
-                        / |
-                       xlxlx */
-                }
-                res[i] = guess[i];
-                break;
-            } else res[i] = '\0';
+
+    char *res = calloc(WORD_LENGTH, sizeof (char));
+    char *word_cpy = calloc(WORD_LENGTH, sizeof (char));
+    int guess_index, word_index;
+    strcpy(word_cpy, word); /* make a copy of word into word_cpy */
+
+    errase_mask(word_cpy, correct_mask, word);
+
+
+    for (guess_index=0; guess_index<WORD_LENGTH; guess_index++) {
+        for (word_index=0; word_index<WORD_LENGTH; word_index++) {
+            if (guess[guess_index] == word_cpy[word_index]) { /* guess at index in word */
+                printf("guess_index %d, word_index %d\n\n", guess_index, word_index);
+                res[guess_index] = guess[guess_index];
+                word_cpy[word_index] = '\0';
+            } else res[guess_index] = '\0';
         }
-break_outer_loop:
+    }
+    return res;
+}
+
+int count_letter(char letter, char *word) {
+    int res=0;
+    while(word) {
+        if (*word == letter) res++;
+        word++;
     }
     return res;
 }
@@ -82,13 +97,14 @@ int is_all_null(char *str, int size) {
 
 int main() {
     char word[WORD_LENGTH] = "hello";
-    char guess[WORD_LENGTH] = "xxoox";
-    char *mask = wrong_place_in_string_mask(guess, word);
+    char guess[WORD_LENGTH] = "oxxxx";
+    char *correct = right_place_mask(word, guess);
+    char *mask = wrong_place_in_string_mask(guess, word, correct);
 
     display_word(mask);
     puts("");
 
-    /* char *is_null = NULL;
+    /* char *is_null = word_index;
     while (1) {
         fputs("> ", stdout);
         is_null = fgets(guess, WORD_LENGTH, stdin);
