@@ -6,6 +6,8 @@
 #define WORD_LENGTH 6
 /* five characters and one null byte */
 
+void display_word(char *word);
+
 /* returns an array of what characters are the same in
    both strings difirent characters are represented
    by null in the result array */
@@ -30,37 +32,25 @@ char *errase_mask(char *dest, char *source_mask, char *word) {
 
 /* returns an array of what characters appear in the
    other string */
-char *wrong_place_in_string_mask(char *guess, char *word, char *correct_mask) {
-    /* TODO: check if letter was previously mapped */
-    /* TODO: make is so if a letter repeats more than twice
-       the code doesn't break */
-
+char *wrong_place_in_string_mask(char *guess, char *word) {
     char *res = calloc(WORD_LENGTH, sizeof (char));
     char *word_cpy = calloc(WORD_LENGTH, sizeof (char));
     int guess_index, word_index;
     strcpy(word_cpy, word); /* make a copy of word into word_cpy */
 
-    errase_mask(word_cpy, correct_mask, word);
-
-
-    for (guess_index=0; guess_index<WORD_LENGTH; guess_index++) {5
-        for (word_index=0; word_index<WORD_LENGTH; word_index++) {
-            if (guess[guess_index] == word_cpy[word_index]) { /* guess at index in word */
-                printf("guess_index %d, word_index %d\n\n", guess_index, word_index);
-				printf("guess[i] %c, word_cpy[i] %c", guess[guess_index], word_cpy[i])
+    for (guess_index=0; guess_index<WORD_LENGTH-1 /* exclude trailing null */; guess_index++) {
+        for (word_index=0; word_index<WORD_LENGTH-1; word_index++) {
+            if (guess[guess_index] == word_cpy[word_index]) {
+				/* if the current letter in guess maps to another letter
+				   in the word */
                 res[guess_index] = guess[guess_index];
                 word_cpy[word_index] = '\0';
-            } else res[guess_index] = '\0';
+				/* ^ this change is made so the letter won't be mapped to again */
+				break;
+            } else {
+				res[guess_index] = '\0';
+			}
         }
-    }
-    return res;
-}
-
-int count_letter(char letter, char *word) {
-    int res=0;
-    while(word) {
-        if (*word == letter) res++;
-        word++;
     }
     return res;
 }
@@ -68,9 +58,11 @@ int count_letter(char letter, char *word) {
 /* displays the masks replacing \0 with . */
 void display_word(char *word) {
     int i;
-    for (i=0; i<WORD_LENGTH-1; i++)
+    for (i=0; i<WORD_LENGTH-1; i++) {
         if (word[i] == '\0') putc('.', stdout);
         else putc(word[i], stdout);
+	}
+	puts("");
 }
 
 void results(char *word, char *guess) {
@@ -97,13 +89,12 @@ int is_all_null(char *str, int size) {
 }
 
 int main() {
-    char word[WORD_LENGTH] = "hello";
-    char guess[WORD_LENGTH] = "oxxxx";
+    char word[WORD_LENGTH] =  "olool";
+    char guess[WORD_LENGTH] = "xlllx";
     char *correct = right_place_mask(word, guess);
-    char *mask = wrong_place_in_string_mask(guess, word, correct);
+    /* char *mask = */ wrong_place_in_string_mask(guess, word, correct);
 
-    display_word(mask);
-    puts("");
+	return 0;
 
     /* char *is_null = word_index;
     while (1) {
