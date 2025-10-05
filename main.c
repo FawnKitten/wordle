@@ -5,6 +5,9 @@
 
 #define WORD_LENGTH 6
 /* five characters and one null byte */
+#define COLOR_RESET "\033[0m"
+#define GREEN       "\033[32m"
+#define YELLOW      "\033[33m"
 
 void display_word(char *word);
 
@@ -67,13 +70,19 @@ void display_word(char *word) {
 
 void results(char *word, char *guess) {
     char *right = right_place_mask(guess, word);
-    /* char *almost = wrong_place_in_string_mask(guess, word); */
-    printf("the guess: %s\n", guess);
-    printf("the word : %s\n", word);
-    /* printf("almost   : %s\n", almost); */
-    printf("matching : ");
-    display_word(right);
-    puts(""); /* new line */
+    char *almost = wrong_place_in_string_mask(guess, word);
+    int i;
+
+    for (i=0; i<WORD_LENGTH; i++) {
+        if (right[i] != '\0') {
+            printf(GREEN "%c" COLOR_RESET, right[i]);
+        } else if (almost[i] != '\0') {
+            printf(YELLOW "%c" COLOR_RESET, almost[i]);
+        } else {
+            printf("%c", guess[i]);
+        }
+    }
+    puts("");
 }
 
 int is_all_alpha(char *str) {
@@ -89,26 +98,27 @@ int is_all_null(char *str, int size) {
 }
 
 int main() {
-    char word[WORD_LENGTH] =  "olool";
-    char guess[WORD_LENGTH] = "xlllx";
-    char *correct = right_place_mask(word, guess);
-    /* char *mask = */ wrong_place_in_string_mask(guess, word, correct);
+    char word[WORD_LENGTH] =  "crane";
+    char guess[WORD_LENGTH] = "";
+    int i;
+    puts("Welcome to wordle! You have 6 attempts to guess the 5-letter word.");
 
-	return 0;
-
-    /* char *is_null = word_index;
-    while (1) {
+    for (i=0; i<6; i++) {
         fputs("> ", stdout);
-        is_null = fgets(guess, WORD_LENGTH, stdin);
-        if (is_null == NULL)
+        if (fgets(guess, WORD_LENGTH, stdin) == NULL)
             break;
         getc(stdin);
+        if (strlen(guess) != WORD_LENGTH-1) {
+            puts("Please enter a five leter word");
+            continue;
+        }
         results(word, guess);
-    } */
+        if (strcmp(word, guess) == 0) {
+            puts("You win!");
+            return 0;
+        }
+    }
+    printf("You lost! The word is %s.\n", word);
 
-
-    /* printf("> ");
-    fgets(guess, WORD_LENGTH, stdin);
-    printf("your guess was: ");
-    puts(guess); */
+    return 0;
 }
